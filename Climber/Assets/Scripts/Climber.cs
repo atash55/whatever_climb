@@ -85,6 +85,11 @@ public class Climber : MonoBehaviour
 			canJump = false;
 		}
 
+		if( Mathf.Abs(rigidbody2D.velocity.y) < 0.01f)
+			rigidbody2D.velocity = new Vector2( rInp.x * 2f ,rigidbody2D.velocity.y);
+
+
+
 		grabCollider.enabled = rigidbody2D.velocity.y < 0.01f;
 
 	}
