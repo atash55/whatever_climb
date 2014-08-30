@@ -13,7 +13,7 @@ public class Climber : MonoBehaviour
 	public Animator anim;
 
 	SpringJoint2D springJoint;
-	bool canJump;
+	public bool canJump;
 
 	string playerNumber;
 
@@ -64,29 +64,38 @@ public class Climber : MonoBehaviour
 	void Update ()
 	{
 
-		directionalInput.x = Input.GetAxisRaw ("Horizontal"+playerNumber);
-		directionalInput.y = Input.GetAxisRaw ("Vertical"+playerNumber);
 
-		var rInp = new Vector2(); // roundeded off input
-		if( Mathf.Abs(directionalInput.x) > 0.01f )
-			rInp.x = Mathf.Sign( directionalInput.x );
-		else
-			rInp.x = 0;
-		
-		if( directionalInput.y > 0.01f )
-			rInp.y = Mathf.Sign( directionalInput.y );
-		else
-			rInp.y = 0;
+		Debug.Log(directionalInput + "" + Input.GetButton("Jump"+playerNumber));
 
-		if( Input.GetButtonDown ("Jump"+playerNumber) && canJump == true &&  Mathf.Abs( rigidbody2D.velocity.y ) < 0.01f)
+		Vector2 rInp = Vector2.zero;
+		bool jumpKeyDown = false;
+
+		if(playerNumber == "1")
+		{
+			rInp.x = Input.GetKey(KeyCode.A)? -1:0;
+			rInp.x += Input.GetKey(KeyCode.D)? 1:0;
+			jumpKeyDown = Input.GetKeyDown(KeyCode.W);
+		}
+		if(playerNumber == "2")
+		{
+			rInp.x = Input.GetKey(KeyCode.LeftArrow)? -1:0;
+			rInp.x += Input.GetKey(KeyCode.RightArrow)? 1:0;
+			jumpKeyDown = Input.GetKeyDown(KeyCode.UpArrow);
+		}
+
+
+
+		var jumpVel = Vector3.zero;
+		if( jumpKeyDown && canJump == true)
 		{
 			anim.SetBool("Jumping", true);
-			rigidbody2D.velocity = new Vector2 (rInp.x * 12.5f / (Mathf.Abs(rInp.y)*0.75f +1),  (20f - (Mathf.Abs(rInp.x)*10f)) * (Mathf.Abs(rInp.y*rInp.x)*1f +1));
+			//rigidbody2D.velocity = new Vector2 (rInp.x * 12.5f / (Mathf.Abs(rInp.y)*0.75f +1),  (20f - (Mathf.Abs(rInp.x)*10f)) * (Mathf.Abs(rInp.y*rInp.x)*1f +1));
+			rigidbody2D.velocity = new Vector2( rigidbody2D.velocity.y, 20f);
 			canJump = false;
 		}
 
-		if( Mathf.Abs(rigidbody2D.velocity.y) < 0.01f)
-			rigidbody2D.velocity = new Vector2( rInp.x * 2f ,rigidbody2D.velocity.y);
+		//if( Mathf.Abs(rigidbody2D.velocity.y) < 0.01f)
+			rigidbody2D.velocity = new Vector2( rInp.x * 4f ,rigidbody2D.velocity.y);
 
 
 
