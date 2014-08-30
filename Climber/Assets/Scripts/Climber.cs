@@ -17,12 +17,22 @@ public class Climber : MonoBehaviour
 
 	string playerNumber;
 
+	public AudioClip jumpAudio;
+	public AudioClip hit1Audio;
+
+	static Climber inst;
 	void Awake ()
 	{
+		inst = this;
 		Application.targetFrameRate = 60;
 		springJoint = GetComponent<SpringJoint2D>();
 
 		playerNumber = name[7].ToString();
+	}
+
+	public static void DisableScript()
+	{
+		inst.enabled = false;
 	}
 
 	void OnEnable ()
@@ -43,29 +53,25 @@ public class Climber : MonoBehaviour
 			anim.SetBool("Jumping", false);
 		}
 		else if(other.collider.CompareTag("Falling Hazard"))
-			EnableCharacterCollider();
+		{
+			DisableGrab();
+			audio.PlayOneShot( hit1Audio );
+		}
 
 	}
 
-	void EnableCharacterCollider()
+	void DisableGrab()
 	{
 		if(grabCollider.gameObject.activeSelf == false)
 			return;
-		StartCoroutine( _EnableCharacterCollider() );
-	}
-	IEnumerator _EnableCharacterCollider()
-	{
 		grabCollider.gameObject.SetActive( false );
-//		charCollider.enabled = true;
-		yield return new WaitForSeconds(0.2f);
-//		charCollider.enabled = false;
 	}
 
 	void Update ()
 	{
 
 
-		Debug.Log(directionalInput + "" + Input.GetButton("Jump"+playerNumber));
+		//Debug.Log(directionalInput + "" + Input.GetButton("Jump"+playerNumber));
 
 		Vector2 rInp = Vector2.zero;
 		bool jumpKeyDown = false;
@@ -91,6 +97,9 @@ public class Climber : MonoBehaviour
 			anim.SetBool("Jumping", true);
 			//rigidbody2D.velocity = new Vector2 (rInp.x * 12.5f / (Mathf.Abs(rInp.y)*0.75f +1),  (20f - (Mathf.Abs(rInp.x)*10f)) * (Mathf.Abs(rInp.y*rInp.x)*1f +1));
 			rigidbody2D.velocity = new Vector2( rigidbody2D.velocity.y, 20f);
+
+			audio.PlayOneShot( jumpAudio );
+
 			canJump = false;
 		}
 
