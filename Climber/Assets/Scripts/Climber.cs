@@ -10,6 +10,8 @@ public class Climber : MonoBehaviour
 	public Collider2D grabCollider;
 	public Collider2D charCollider;
 
+	public Animator anim;
+
 	SpringJoint2D springJoint;
 	bool canJump;
 
@@ -36,10 +38,27 @@ public class Climber : MonoBehaviour
 	{
 		//Debug.Log(other.collider.name);
 		if(other.collider.CompareTag("Ledge"))
+		{
 			canJump = true;
+			anim.SetBool("Jumping", false);
+		}
 		else if(other.collider.CompareTag("Falling Hazard"))
-			charCollider.enabled = true;
+			EnableCharacterCollider();
 
+	}
+
+	void EnableCharacterCollider()
+	{
+		if(grabCollider.gameObject.activeSelf == false)
+			return;
+		StartCoroutine( _EnableCharacterCollider() );
+	}
+	IEnumerator _EnableCharacterCollider()
+	{
+		grabCollider.gameObject.SetActive( false );
+//		charCollider.enabled = true;
+		yield return new WaitForSeconds(0.2f);
+//		charCollider.enabled = false;
 	}
 
 	void Update ()
@@ -61,7 +80,7 @@ public class Climber : MonoBehaviour
 
 		if( Input.GetButtonDown ("Jump"+playerNumber) && canJump == true &&  Mathf.Abs( rigidbody2D.velocity.y ) < 0.01f)
 		{
-
+			anim.SetBool("Jumping", true);
 			rigidbody2D.velocity = new Vector2 (rInp.x * 12.5f / (Mathf.Abs(rInp.y)*0.75f +1),  (20f - (Mathf.Abs(rInp.x)*10f)) * (Mathf.Abs(rInp.y*rInp.x)*1f +1));
 			canJump = false;
 		}
