@@ -23,6 +23,9 @@ public class SmoothFollow2D : MonoBehaviour {
 		else
 			targetY = target1.position.y + yBias;
 
+		if(targetY < thisTransform.position.y)
+			return;
+
 		thisTransform.position = new Vector3(thisTransform.position.x,
 		                                     Mathf.SmoothDamp( thisTransform.position.y, targetY, ref velocity.y, smoothTime),
 		                                     thisTransform.position.z);

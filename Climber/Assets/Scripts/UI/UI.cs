@@ -25,12 +25,12 @@ public class UI : MonoBehaviour
 	{
 		Animation anim = greenWins ? greenWinsAnim : blueWinsAnim;
 		anim.Play();
-		yield return new WaitForSeconds (4);
+		yield return new WaitForSeconds (3);
 		foreach( AnimationState s in anim )
 			s.speed = -1;
 		anim.Play ();
 
-
+		gameOverScreenAnim.Play();
 	}
 
 	void RestartLevel()

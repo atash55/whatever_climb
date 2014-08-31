@@ -32,7 +32,8 @@ public class Climber : MonoBehaviour
 
 	public static void DisableScript()
 	{
-		inst.enabled = false;
+		inst.grabCollider.enabled = true;
+		//inst.enabled = false;
 	}
 
 	void OnEnable ()
@@ -54,6 +55,7 @@ public class Climber : MonoBehaviour
 		}
 		else if(other.collider.CompareTag("Falling Hazard"))
 		{
+			WinLoseDetector.KillPlayer( grabCollider );
 			DisableGrab();
 			audio.PlayOneShot( hit1Audio );
 		}
